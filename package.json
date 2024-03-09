@@ -1,0 +1,37 @@
+{
+  "name": "@ocopjs/server-side-graphql-client",
+  "description": "OcopJS - Thư viện để gọi GraphQL API phía máy chủ. 🇻🇳",
+  "version": "1.0.0",
+  "author": "ocopjs",
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx,md,js}\"",
+    "semantic-release": "semantic-release",
+    "test": "jest"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://ocopee.com",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ocopjs/server-side-graphql-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ocopjs/server-side-graphql-client/issues"
+  },
+  "main": "./src/index.js",
+  "engines": {
+    "node": "16"
+  },
+  "devDependencies": {
+    "@semantic-release/commit-analyzer": "^11.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.6",
+    "@semantic-release/npm": "^11.0.2",
+    "@semantic-release/release-notes-generator": "^12.1.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "semantic-release": "^23.0.2"
+  }
+}
