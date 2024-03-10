@@ -31,11 +31,11 @@ const { data, errors } = await ocop.executeGraphQL({
 const user = data.createUser;
 ```
 
-Xài thư viện `@ocop/server-side-graphql-client` này chúng ta có thể viết gọn hơn
+Xài thư viện `@ocopjs/server-side-graphql-client` này chúng ta có thể viết gọn hơn
 là:
 
 ```js
-const { createItem } = require("@ocop/server-side-graphql-client");
+const { createItem } = require("@ocopjs/server-side-graphql-client");
 
 const user = await createItem({
   ocop,
@@ -83,11 +83,11 @@ buon.createList("Page", {
       // Whenever copy field is set fetch the related data
       const pageToCopy = resolvedData.copy
         ? await getItem({
-          buon,
-          listKey: "Page",
-          itemId: resolvedData.copy,
-          returnFields: "name, content",
-        })
+            buon,
+            listKey: "Page",
+            itemId: resolvedData.copy,
+            returnFields: "name, content",
+          })
         : {};
       // resolve data from the copied item and unset the relationship
       return { ...resolvedData, ...pageToCopy, copy: undefined };
