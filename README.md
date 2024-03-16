@@ -45,7 +45,7 @@ const user = await createItem({
 });
 ```
 
-There are three key differences between `buon.executeGraphQL` and `createItem`
+There are three key differences between `ocop.executeGraphQL` and `createItem`
 (and other functions from this package):
 
 1. If there is an error, `createItem` will be thrown as an exception, rather
@@ -64,7 +64,7 @@ common examples might include simple data seeding:
 
 ```js
 const seedUsers = async (usersData) => {
-  await createItems({ buon, listKey: "User", items: usersData });
+  await createItems({ ocop, listKey: "User", items: usersData });
 };
 ```
 
@@ -72,7 +72,7 @@ or fetching data inside hooks:
 
 ```js
 // This example will copy data from a related field if set
-buon.createList("Page", {
+ocop.createList("Page", {
   fields: {
     name: { type: Text },
     content: { type: Text },
@@ -83,7 +83,7 @@ buon.createList("Page", {
       // Whenever copy field is set fetch the related data
       const pageToCopy = resolvedData.copy
         ? await getItem({
-            buon,
+            ocop,
             listKey: "Page",
             itemId: resolvedData.copy,
             returnFields: "name, content",
@@ -120,12 +120,12 @@ The following config options are common to all server-side graphQL functions.
 
 | Properties     | Type     | Default    | Description                                                                                                                                                                                                         |
 | -------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `buon`         | `Buon`   | (required) | Buon instance.                                                                                                                                                                                                      |
-| `listKey`      | `String` | (required) | Buon list name.                                                                                                                                                                                                     |
+| `ocop`         | `Ocop`   | (required) | Ocop instance.                                                                                                                                                                                                      |
+| `listKey`      | `String` | (required) | Ocop list name.                                                                                                                                                                                                     |
 | `returnFields` | `String` | `id`       | A graphQL fragment of fields to return. Must match the graphQL return type.                                                                                                                                         |
 | `context`      | `Object` | N/A        | An Apollo [`context` object](https://www.apollographql.com/docs/apollo-server/data/resolvers/#the-context-argument). See the [server side graphQL docs](/docs/discussions/server-side-graphql.md) for more details. |
 
-> NOTE: If `context` argument is provided then the `buon` argument is not
+> NOTE: If `context` argument is provided then the `ocop` argument is not
 > required.
 
 ### `createItem`
@@ -135,9 +135,9 @@ Create a single item.
 #### Usage
 
 ```js
-const { createItem } = require("@buon/server-side-graphql-client");
+const { createItem } = require("@ocop/server-side-graphql-client");
 
-buon.createList("User", {
+ocop.createList("User", {
   fields: {
     name: { type: Text },
     email: { type: Text },
@@ -146,15 +146,15 @@ buon.createList("User", {
 
 const addUser = async (userInput) => {
   const user = await createItem({
-    buon,
+    ocop,
     listKey: "User",
     item: userInput,
     returnFields: `name, email`,
   });
-  console.log(user); // { name: 'buon user', email: 'buon@test.com'}
+  console.log(user); // { name: 'ocop user', email: 'ocop@test.com'}
 };
 
-addUser({ name: "buon user", email: "buon@test.com" });
+addUser({ name: "ocop user", email: "ocop@test.com" });
 ```
 
 **Note**: The `item` property is a graphQL create input. For Relationship fields
@@ -177,9 +177,9 @@ Create multiple items.
 #### Usage
 
 ```js
-const { createItems } = require("@buon/server-side-graphql-client");
+const { createItems } = require("@ocop/server-side-graphql-client");
 
-buon.createList("User", {
+ocop.createList("User", {
   fields: {
     name: { type: Text },
     email: { type: Text },
@@ -193,7 +193,7 @@ const dummyUsers = [
 
 const addUsers = async () => {
   const users = await createItems({
-    buon,
+    ocop,
     listKey: "User",
     items: dummyUsers,
     returnFields: `name`,
@@ -219,9 +219,9 @@ Retrieve a single item by its ID.
 #### Usage
 
 ```js
-const { getItem } = require("@buon/server-side-graphql-client");
+const { getItem } = require("@ocop/server-side-graphql-client");
 
-buon.createList("User", {
+ocop.createList("User", {
   fields: {
     name: { type: Text },
     email: { type: Text },
@@ -230,7 +230,7 @@ buon.createList("User", {
 
 const getUser = async ({ itemId }) => {
   const user = await getItem({
-    buon,
+    ocop,
     listKey: "User",
     itemId,
     returnFields: "id, name",
@@ -251,15 +251,15 @@ getUser({ itemId: "123" });
 ### `getItems`
 
 Retrieve multiple items. Use
-[where](https://www.buon.vn/guides/intro-to-graphql/#where) clause to filter
+[where](https://www.ocop.vn/guides/intro-to-graphql/#where) clause to filter
 results.
 
 #### Usage
 
 ```js
-const { getItems } = require("@buon/server-side-graphql-client");
+const { getItems } = require("@ocop/server-side-graphql-client");
 
-buon.createList("User", {
+ocop.createList("User", {
   fields: {
     name: { type: Text },
     email: { type: Text },
@@ -268,12 +268,12 @@ buon.createList("User", {
 
 const getUsers = async () => {
   const allUsers = await getItems({
-    buon,
+    ocop,
     listKey: "User",
     returnFields: "name",
   });
   const someUsers = await getItems({
-    buon,
+    ocop,
     listKey: "User",
     returnFields: "name",
     where: { name: "user1" },
@@ -290,8 +290,8 @@ getUsers();
 
 | Properties | Type                             | Default | Description                                                                                                                                 |
 | ---------- | -------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `where`    | GraphQL `[listKey]WhereInput`    | `{}`    | Limit results to items matching [where clause](https://www.buon.vn/guides/intro-to-graphql/#where).                                         |
-| `sortBy`   | GraphQL enum `Sort[listKey]sBy}` |         | Returned the results based on specified order. Refer [docs](https://www.buon.vn/guides/intro-to-graphql#sortby) for available sort options. |
+| `where`    | GraphQL `[listKey]WhereInput`    | `{}`    | Limit results to items matching [where clause](https://www.ocop.vn/guides/intro-to-graphql/#where).                                         |
+| `sortBy`   | GraphQL enum `Sort[listKey]sBy}` |         | Returned the results based on specified order. Refer [docs](https://www.ocop.vn/guides/intro-to-graphql#sortby) for available sort options. |
 | `first`    | `Number`                         |         | Limit the number of items returned from the query.                                                                                          |
 | `skip`     | `Number`                         |         | Skip that many elements in the list before collecting the items to be returned.                                                             |
 | `pageSize` | `Number`                         | 500     | The query batch size. Useful when retrieving a large set of data.                                                                           |
@@ -303,9 +303,9 @@ Update a single item.
 #### Usage
 
 ```js
-const { updateItem } = require("@buon/server-side-graphql-client");
+const { updateItem } = require("@ocop/server-side-graphql-client");
 
-buon.createList("User", {
+ocop.createList("User", {
   fields: {
     name: { type: Text },
     email: { type: Text },
@@ -314,7 +314,7 @@ buon.createList("User", {
 
 const updateUser = async (updateUser) => {
   const updatedUser = await updateItem({
-    buon,
+    ocop,
     listKey: "User",
     item: updateUser,
     returnFields: "name",
@@ -339,9 +339,9 @@ Update multiple items.
 #### Usage
 
 ```js
-const { updateItems } = require("@buon/server-side-graphql-client");
+const { updateItems } = require("@ocop/server-side-graphql-client");
 
-buon.createList("User", {
+ocop.createList("User", {
   fields: {
     name: { type: Text },
     email: { type: Text },
@@ -350,7 +350,7 @@ buon.createList("User", {
 
 const updateUsers = async (updateUsers) => {
   const users = await updateItems({
-    buon,
+    ocop,
     listKey: "User",
     items: updateUsers,
     returnFields: "name",
@@ -381,9 +381,9 @@ Delete a single item.
 #### Usage
 
 ```js
-const { deleteItem } = require("@buon/server-side-graphql-client");
+const { deleteItem } = require("@ocop/server-side-graphql-client");
 
-buon.createList("User", {
+ocop.createList("User", {
   fields: {
     name: { type: Text },
     email: { type: Text },
@@ -391,7 +391,7 @@ buon.createList("User", {
 });
 
 const deleteUser = async (itemId) => {
-  const user = await deleteItem({ buon, listKey: "User", itemId });
+  const user = await deleteItem({ ocop, listKey: "User", itemId });
   console.log(user); // { id: '123' }
 };
 deleteUser("123");
@@ -412,9 +412,9 @@ Delete multiple items.
 #### Usage
 
 ```js
-const { deleteItems } = require("@buon/server-side-graphql-client");
+const { deleteItems } = require("@ocop/server-side-graphql-client");
 
-buon.createList("User", {
+ocop.createList("User", {
   fields: {
     name: { type: Text },
     email: { type: Text },
@@ -422,7 +422,7 @@ buon.createList("User", {
 });
 
 const deletedUsers = async (items) => {
-  const users = await deleteItems({ buon, listKey: "User", items });
+  const users = await deleteItems({ ocop, listKey: "User", items });
   console.log(users); // [{id: '123'}, {id: '456'}]
 };
 deletedUsers(["123", "456"]);
@@ -445,7 +445,7 @@ Execute a custom query.
 
 | Properties  | Type     | Default    | Description                                                                                                                                                                                                         |
 | ----------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `buon`      | Object   | (required) | Buon instance.                                                                                                                                                                                                      |
+| `ocop`      | Object   | (required) | Ocop instance.                                                                                                                                                                                                      |
 | `query`     | String   | (required) | The GraphQL query to execute.                                                                                                                                                                                       |
 | `variables` | Object   | (required) | Object containing variables your custom query needs.                                                                                                                                                                |
 | `context`   | `Object` | N/A        | An Apollo [`context` object](https://www.apollographql.com/docs/apollo-server/data/resolvers/#the-context-argument). See the [server side graphQL docs](/docs/discussions/server-side-graphql.md) for more details. |
