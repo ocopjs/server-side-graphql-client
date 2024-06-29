@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "license": "Apache-2.0",
-  "homepage": "https://ocopee.com",
+  "homepage": "https://docs.ocopee.com/docs/ocopjs/references/server-side-graphql-client",
   "publishConfig": {
     "access": "public"
   },
