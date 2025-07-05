@@ -1,7 +1,7 @@
 const getContext = (ocop) =>
   ocop.createContext({ schemaName: "public", authentication: {} }).sudo();
 
-const runQuery = async ({
+const runCustomQuery = async ({
   ocop,
   query,
   variables,
@@ -39,7 +39,7 @@ const _runChunkedMutation = async ({
 
   const result = await Promise.all(
     chunks.map((chunk) =>
-      runQuery({ query, variables: { items: chunk }, context }),
+      runCustomQuery({ query, variables: { items: chunk }, context }),
     ),
   );
 
@@ -64,7 +64,12 @@ const createItem = async ({
     ${createMutationName}(data: $item) { ${returnFields} }
   }`;
 
-  const result = await runQuery({ ocop, query, variables: { item }, context });
+  const result = await runCustomQuery({
+    ocop,
+    query,
+    variables: { item },
+    context,
+  });
   return result[createMutationName];
 };
 
@@ -102,7 +107,11 @@ const getItem = async ({
   const { itemQueryName } = context.gqlNames(listKey);
 
   const query = `query ($id: ID!) { ${itemQueryName}(where: { id: $id }) { ${returnFields} }  }`;
-  const result = await runQuery({ query, variables: { id: itemId }, context });
+  const result = await runCustomQuery({
+    query,
+    variables: { id: itemId },
+    context,
+  });
   return result[itemQueryName];
 };
 
@@ -138,7 +147,7 @@ const getItems = async ({
     if (first && allItems.length + _first > first) {
       _first = first - allItems.length;
     }
-    const response = await runQuery({
+    const response = await runCustomQuery({
       query,
       context,
       variables: { first: _first, skip: _skip, sortBy, where },
@@ -170,7 +179,7 @@ const updateItem = async ({
     ${updateMutationName}(id: $id, data: $data) { ${returnFields} }
   }`;
 
-  const result = await runQuery({
+  const result = await runCustomQuery({
     query,
     variables: { id: item.id, data: item.data },
     context,
@@ -215,7 +224,11 @@ const deleteItem = async ({
     ${deleteMutationName}(id: $id) { ${returnFields} }
   }`;
 
-  const result = await runQuery({ query, variables: { id: itemId }, context });
+  const result = await runCustomQuery({
+    query,
+    variables: { id: itemId },
+    context,
+  });
   return result[deleteMutationName];
 };
 
@@ -243,8 +256,7 @@ const deleteItems = async ({
     context,
   });
 };
-
-module.exports = {
+export {
   getItem,
   getItems,
   createItem,
@@ -253,5 +265,5 @@ module.exports = {
   updateItems,
   deleteItem,
   deleteItems,
-  runCustomQuery: runQuery,
+  runCustomQuery,
 };
