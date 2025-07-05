@@ -1,7 +1,7 @@
 {
   "name": "@ocopjs/server-side-graphql-client",
   "description": "OcopJS - Thư viện để gọi GraphQL API phía máy chủ. 🇻🇳",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "ocopjs",
   "scripts": {
     "format": "prettier --write \"**/*.{ts,tsx,md,js}\"",
